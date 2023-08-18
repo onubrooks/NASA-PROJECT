@@ -1,0 +1,19 @@
+{
+  "name": "nasa-project",
+  "version": "1.0.0",
+  "description": "The completed version of a NASA project, built in NodeJs and React. It schedules mission launches for interstellar travel to one of the Kepler Exoplanets.",
+  "main": "index.js",
+  "scripts": {
+    "install-server": "npm install --prefix server",
+    "install-client": "npm install --prefix client",
+    "install": "npm run install-server && npm run install-client",
+    "server": "npm run watch --prefix server",
+    "client": "npm start --prefix client",
+    "watch": "npm run server & npm run client",
+    "deploy": "npm run build --prefix client && npm start --prefix server",
+    "test": "npm test --prefix server && npm test --prefix client"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
