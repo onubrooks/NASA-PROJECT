@@ -6,8 +6,11 @@ const { loadPlanetsData } = require('./models/planets.model');
 
 const PORT = process.env.PORT || 8000;
 
+const dbUser = process.env.DB_USER;
+const dbPass = process.env.DB_PASSWORD;
+
 const MONOGDB_URI =
-  "mongodb+srv://nasa_api:lgepLaW3DTDHEVX3@cluster0.lsm64co.mongodb.net/nasa?retryWrites=true&w=majority";
+  `mongodb+srv://${dbUser}:${dbPass}@cluster0.lsm64co.mongodb.net/nasa?retryWrites=true&w=majority`;
 
 const server = http.createServer(app);
 
