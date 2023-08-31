@@ -4,7 +4,6 @@ const { parse } = require("csv-parse");
 const fs = require("fs");
 const { join } = require("path");
 
-const habitablePlanets = [];
 function isHabitablePlanet(planet) {
   return (
     planet["koi_disposition"] === "CONFIRMED" &&
@@ -31,18 +30,17 @@ function loadPlanetsData() {
         )
         .on("data", async (data) => {
           if (isHabitablePlanet(data)) {
-            await planets.create({
-              keplerName: data.kepler_name,
-            });
+            savePlanet(data);
           }
         })
         .on("error", (err) => {
           console.log(err);
           reject(err);
         })
-        .on("end", () => {
+        .on("end", async () => {
+          const countPlanetsFound = (await getAllPlanets()).length;
           console.log(
-            `ONLY ${habitablePlanets.length} habitable planets found!!`
+            `ONLY ${countPlanetsFound} habitable planets found!!`
           );
           console.log("CSV file successfully processed");
           resolve();
@@ -50,8 +48,29 @@ function loadPlanetsData() {
     });
 }
 
-function getAllPlanets() {
-  return habitablePlanets;
+async function getAllPlanets() {
+  return await planets.find({}, {
+    '_id': 0, // exclude the _id field
+    '__v': 0, // exclude the __v field, which is a versioning field that mongoose uses internally
+  });
+}
+
+async function savePlanet(planet) {
+  try{
+    await planets.updateOne(
+      {
+        keplerName: planet.kepler_name,
+      },
+      {
+        keplerName: planet.kepler_name,
+      },
+      {
+        upsert: true,
+      }
+    );
+  } catch(err) {
+    console.error(`Could not save planet ${err}`)
+  }
 }
 
 module.exports = {
