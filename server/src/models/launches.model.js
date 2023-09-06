@@ -6,19 +6,6 @@ const planets = require('./planets.mongo');
 
 const DEFAULT_FLIGHT_NUMBER = 100;
 
-const launch = {
-    flightNumber: 100,
-    mission: 'mission',
-    rocket: 'rocket',
-    launchDate: new Date('December 27, 2030'),
-    target: 'Kepler-442 b',
-    customers: ['NASA', 'ZTM'],
-    upcoming: true,
-    success: true,
-};
-
-saveLaunch(launch);
-
 async function populateLaunches() {
     const response = await axios.post(SPACEX_API_URL, {
       query: {},
@@ -99,11 +86,14 @@ async function existsLaunchWithId(launchId) {
     });
 }
 
-async function getAllLaunches() {
+async function getAllLaunches(skip, limit) {
     return await launchesDatabase.find({}, {
         '_id': 0,
         '__v': 0,
-    });
+    })
+    .sort({flightNumber: 1})
+    .skip(skip)
+    .limit(limit);
 }
 
 async function saveLaunch(launch){
