@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
+require("dotenv").config();
 
-const dbUser = process.env.DB_USER;
-const dbPass = process.env.DB_PASSWORD;
-const MONOGDB_URI = `mongodb+srv://${dbUser}:${dbPass}@cluster0.lsm64co.mongodb.net/nasa?retryWrites=true&w=majority`;
+const MONGO_URL = process.env.MONGO_URL;
 
 mongoose.connection.once("open", () => {
   console.log("MongoDB connected");
@@ -13,7 +12,7 @@ mongoose.connection.on("error", (err) => {
 });
 
 async function mongoConnect() {
-    await mongoose.connect(MONOGDB_URI);
+    await mongoose.connect(MONGO_URL);
 }
 
 async function mongoDisconnect() {
